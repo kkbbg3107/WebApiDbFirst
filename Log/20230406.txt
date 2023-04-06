@@ -1,0 +1,22 @@
+開始 : 2023/04/06 20:35:43 
+ path :/api/Logins/JwtLogin 
+ userEmail :  
+ method : POST 
+結束 : 2023/04/06 20:35:46 
+ path :/api/Logins/JwtLogin 
+ userEmail :  
+ method : POST開始 : 2023/04/06 20:36:16 
+ path :/api/Logins/JwtLogin 
+ userEmail :  
+ method : POST 
+結束 : 2023/04/06 20:36:20 
+ path :/api/Logins/JwtLogin 
+ userEmail :  
+ method : POST開始 : 2023/04/06 20:36:58 
+ path :/api/Employees 
+ userEmail :  
+ method : GET 
+結束 : 2023/04/06 20:36:58 
+ path :/api/Employees 
+ userEmail :  
+ method : GET
