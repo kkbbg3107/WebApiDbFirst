@@ -17,6 +17,8 @@ public partial class TodoListContext : DbContext
 
     public virtual DbSet<Employee> Employees { get; set; }
 
+    public virtual DbSet<EmployeeDetail> EmployeeDetails { get; set; }
+
     public virtual DbSet<Login> Logins { get; set; }
 
     public virtual DbSet<Role> Roles { get; set; }
@@ -30,7 +32,22 @@ public partial class TodoListContext : DbContext
             entity.ToTable("Employee");
 
             entity.Property(e => e.Id).ValueGeneratedNever();
-            entity.Property(e => e.Name).HasMaxLength(50);
+        });
+
+        modelBuilder.Entity<EmployeeDetail>(entity =>
+        {
+            entity
+                .HasNoKey()
+                .ToTable("EmployeeDetail");
+
+            entity.Property(e => e.Email).HasMaxLength(50);
+            entity.Property(e => e.Name).HasMaxLength(10);
+            entity.Property(e => e.Salary).HasColumnType("decimal(18, 0)");
+
+            entity.HasOne(d => d.Employee).WithMany()
+                .HasForeignKey(d => d.EmployeeId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_EmployeeDetail_Employee");
         });
 
         modelBuilder.Entity<Login>(entity =>

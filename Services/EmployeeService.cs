@@ -24,7 +24,6 @@ namespace WebApiDBFirst.Services
             var result = _employeeRepo.GetEmployee().Where(x => x.Id < 10).Select(x => new EmployeeDTO()
             {
                 Id = x.Id,
-                Name = x.Name,
             });
             return await result.ToListAsync();
         }        
@@ -34,7 +33,6 @@ namespace WebApiDBFirst.Services
             return await _employeeRepo.GetEmployee().Select(x => new EmployeeDTO() 
             {
                 Id = x.Id,
-                Name = x.Name,
             }).ToListAsync();
         }
 

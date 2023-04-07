@@ -25,7 +25,7 @@ namespace WebApiDBFirst.AuthorizationFilter
             int startIndex = parameters.IndexOf('[') + 1;
             int endIndex = parameters.IndexOf(']');
             string innerString = parameters.Substring(startIndex, endIndex - startIndex);
-            var para = JsonConvert.DeserializeObject<Employee>(innerString);
+            var para = JsonConvert.DeserializeObject<EmployeeDetail>(innerString);
             if (_blacklist.Contains(para.Name))
             {
                 throw new Exception("此人為黑名單,已拒絕入職申請");
