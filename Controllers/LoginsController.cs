@@ -85,10 +85,8 @@ namespace WebApiDBFirst.Controllers
         [HttpPost("JwtLogin")]
         public async Task<ActionResult<string>> JwtLogin(Login login)
         {
-            var user = (from a in _context.Logins
-                        where a.Account == login.Account
-                        && a.Password == login.Password
-                        select a).SingleOrDefault();
+            var user = _context.Logins.Where(x => x.Account == login.Account && x.Password == login.Password)
+                .Select(x => x).SingleOrDefault();
 
             if (user is null)
             {

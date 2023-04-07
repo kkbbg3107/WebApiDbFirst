@@ -23,6 +23,16 @@ namespace WebApiDBFirst.Repository
             return _context.Employees.Select(x => x);
         }
 
+        //public async Task<string> UpdateEmployee(Employee employee)
+        //{
+        //    var result = _context.Employees.Where(x => x.Id == employee.Id).Select(x => x).FirstOrDefault();
+            
+        //    if (result is null)
+        //    {
+        //        return "沒有該id的已存在資料";
+        //    }
+        //}
+
         public async Task RemoveEmployee(Employee employee)
         {
             _context.Employees.Remove(employee);
