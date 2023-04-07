@@ -8,4 +8,6 @@ public partial class Employee
     public int Id { get; set; }
 
     public int? Rank { get; set; }
+
+    public virtual EmployeeDetail? EmployeeDetail { get; set; }
 }

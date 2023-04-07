@@ -364,5 +364,5 @@ FodyWeavers.xsd
 
 /bin\Debug\net6.0/* 
 
-/.vs\WebApiDBFirst\v17/* 
+/.vs\WebApiDBFirst/* 
 /obj/* 

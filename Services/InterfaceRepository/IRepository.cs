@@ -4,10 +4,13 @@ namespace WebApiDBFirst.Services.InterfaceRepository
 {
     public interface IRepository
     {
-        IQueryable<Employee> GetEmployee();
+        IQueryable<EmployeeDetail> GetEmployees();
+        Task<EmployeeDetail> GetEmployee(int id);
 
-        Task AddEmployee(Employee employee);
+        Task<string> Update(int id, EmployeeDetail employee);
 
-        Task RemoveEmployee(Employee employee);
+        Task<Employee> AddEmployee(EmployeeDetail employee);
+
+        Task RemoveEmployee(EmployeeDetail employee);
     }
 }

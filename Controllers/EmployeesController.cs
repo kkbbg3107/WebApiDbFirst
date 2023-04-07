@@ -2,72 +2,122 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using WebApiDBFirst.AuthorizationFilter;
-using WebApiDBFirst.Controllers.InterfaceService;
-using WebApiDBFirst.DTOModels;
 using WebApiDBFirst.Models;
 
 namespace WebApiDBFirst.Controllers
-{ 
+{
     [Route("api/[controller]")]
     [ApiController]
     public class EmployeesController : ControllerBase
-    {        
-        private readonly IService _service;
+    {
+        private readonly TodoListContext _context;
 
-        public EmployeesController(IService service)
+        public EmployeesController(TodoListContext context)
         {
-            _service = service;           
+            _context = context;
         }
 
+        // GET: api/Employees
         [HttpGet]
-        public async Task<IEnumerable<EmployeeDTO>> GetEmployeeDTO()
-        {           
-            var result = await _service.FilterColumn();
-
-            return result;
+        public async Task<ActionResult<IEnumerable<Employee>>> GetEmployees()
+        {
+          if (_context.Employees == null)
+          {
+              return NotFound();
+          }
+            return await _context.Employees.ToListAsync();
         }
 
+        // GET: api/Employees/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<EmployeeDTO>> GetEmployee(int id)
+        public async Task<ActionResult<Employee>> GetEmployee(int id)
         {
-            var source = await _service.FilterColumn();
-            if (!source.Any(x => x.Id == id))
+          if (_context.Employees == null)
+          {
+              return NotFound();
+          }
+            var employee = await _context.Employees.FindAsync(id);
+
+            if (employee == null)
             {
-                return NotFound("查無該id");
+                return NotFound();
             }
 
-            return Ok(source.First(x => x.Id == id));
+            return employee;
         }
 
-        [HttpPost("{id}")]
-        [BlackListFilter(new string[] { "kk", "ss" })]
-        public async Task<ActionResult<Employee>> AddEmployee(Employee emp)
+        // PUT: api/Employees/5
+        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        [HttpPut("{id}")]
+        public async Task<IActionResult> PutEmployee(int id, Employee employee)
         {
-            var source = await _service.FilterColumn();
-            if (source.Select(x => x.Id).Contains(emp.Id))
+            if (id != employee.Id)
             {
-                return NoContent();
+                return BadRequest();
             }
 
-            return Ok(_service.AdditemSth(emp));
+            _context.Entry(employee).State = EntityState.Modified;
+
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!EmployeeExists(id))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
+
+            return NoContent();
         }
 
+        // 新增 Employee 資料的 API
+        [HttpPost]
+        public async Task<ActionResult<Employee>> CreateEmployee([FromBody] Employee employee)
+        {
+            // 將 EmployeeDetail 屬性設為空
+            employee.EmployeeDetail = null;
+
+            // 儲存 Employee 物件
+            _context.Employees.Add(employee);
+            await _context.SaveChangesAsync();
+
+            // 回傳建立的 Employee 物件
+            return CreatedAtAction(nameof(GetEmployee), new { id = employee.Id }, employee);
+        }
+
+        // DELETE: api/Employees/5
         [HttpDelete("{id}")]
-        public async Task<ActionResult> DeleteEmployee(int id)
+        public async Task<IActionResult> DeleteEmployee(int id)
         {
-            var result = await _service.EmpolyeeNothing();
-            if (!result.Select(x => x.Id).Contains(id))
+            if (_context.Employees == null)
             {
-                return NotFound("無此id");
+                return NotFound();
             }
-            var emp = result.Where(x => x.Id == id).First();
-            await _service.RemoveSth(emp);
-            return Ok("已刪除該項目");
-        }       
+            var employee = await _context.Employees.FindAsync(id);
+            if (employee == null)
+            {
+                return NotFound();
+            }
+
+            _context.Employees.Remove(employee);
+            await _context.SaveChangesAsync();
+
+            return NoContent();
+        }
+
+        private bool EmployeeExists(int id)
+        {
+            return (_context.Employees?.Any(e => e.Id == id)).GetValueOrDefault();
+        }
     }
 }

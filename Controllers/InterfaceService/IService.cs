@@ -5,12 +5,12 @@ namespace WebApiDBFirst.Controllers.InterfaceService
 {
     public interface IService
     {
-        Task<IEnumerable<EmployeeDTO>> FilterColumn();
-        Task<IEnumerable<EmployeeDTO>> Nothing();
+        Task<EmployeeDetail> QueryItemSth(int id);
+        Task<IEnumerable<EmployeeDetail>> QueryAll();
+        Task UpdateItemSth(EmployeeDetail emp);
+        Task AdditemSth(EmployeeDetail emp);
 
-        Task<IEnumerable<Employee>> EmpolyeeNothing();
-        Task AdditemSth(Employee emp);
-
-        Task RemoveSth(Employee emp);
+        Task<Employee> Add(EmployeeDetail emp);
+        Task RemoveSth(EmployeeDetail emp);
     }
 }

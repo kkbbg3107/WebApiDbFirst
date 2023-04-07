@@ -60,13 +60,13 @@ namespace WebApiDBFirst
             builder.Services.AddDbContext<TodoListContext>
                 (options => options.UseSqlServer(json.Build().GetConnectionString("TodoDatabase")));
 
-            builder.Services.AddScoped<IRepository, EmployeeRepository>();
-            builder.Services.AddScoped<IService, EmployeeService>();
+            builder.Services.AddScoped<IRepository, EmployeeDetailRepository>();
+            builder.Services.AddScoped<IService, EmployeeDetailService>();
             builder.Services.AddMvc(options =>
             {
-                options.Filters.Add(new JwtAuthorizationFilter(builder.Configuration));
-                options.Filters.Add(typeof(LogFilter));
-                options.Filters.Add(new TodoResultFilter());
+                //options.Filters.Add(new JwtAuthorizationFilter(builder.Configuration));
+                //options.Filters.Add(typeof(LogFilter));
+                //options.Filters.Add(new TodoResultFilter());
             });
 
             builder.Services.AddHttpContextAccessor();
