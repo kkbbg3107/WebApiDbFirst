@@ -61,7 +61,7 @@ namespace WebApiDBFirst
                 (options => options.UseSqlServer(json.Build().GetConnectionString("TodoDatabase")));
 
             builder.Services.AddScoped<IRepository, EmployeeDetailRepository>();
-            builder.Services.AddScoped<IService, EmployeeDetailService>();
+            builder.Services.AddTransient<IService, EmployeeDetailService>();
             builder.Services.AddMvc(options =>
             {
                 //options.Filters.Add(new JwtAuthorizationFilter(builder.Configuration));
