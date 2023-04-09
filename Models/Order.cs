@@ -5,13 +5,13 @@ namespace WebApiDBFirst.Models;
 
 public partial class Order
 {
-    public int RowId { get; set; }
+    public int OrderId { get; set; }
 
-    public int? OrderId { get; set; }
+    public string? CustomerId { get; set; }
 
-    public string? CustNo { get; set; }
+    public DateTime? OrderDate { get; set; }
 
-    public decimal? Price { get; set; }
+    public virtual Customer? Customer { get; set; }
 
-    public virtual Customer? CustNoNavigation { get; set; }
+    public virtual ICollection<OrderDetail> OrderDetails { get; } = new List<OrderDetail>();
 }

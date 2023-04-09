@@ -54,7 +54,7 @@ namespace WebApiDBFirst.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> PutOrder(int id, Order order)
         {
-            if (id != order.RowId)
+            if (id != order.OrderId)
             {
                 return BadRequest();
             }
@@ -83,7 +83,7 @@ namespace WebApiDBFirst.Controllers
         // POST: api/Orders
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Order>> PostOrder(Order order)
+        public async Task<ActionResult<string>> PostOrder(Order order)
         {
           if (_context.Orders == null)
           {
@@ -92,7 +92,7 @@ namespace WebApiDBFirst.Controllers
             _context.Orders.Add(order);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetOrder", new { id = order.RowId }, order);
+            return "success";
         }
 
         // DELETE: api/Orders/5
@@ -117,7 +117,7 @@ namespace WebApiDBFirst.Controllers
 
         private bool OrderExists(int id)
         {
-            return (_context.Orders?.Any(e => e.RowId == id)).GetValueOrDefault();
+            return (_context.Orders?.Any(e => e.OrderId == id)).GetValueOrDefault();
         }
     }
 }

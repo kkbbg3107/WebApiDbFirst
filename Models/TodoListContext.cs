@@ -25,6 +25,10 @@ public partial class TodoListContext : DbContext
 
     public virtual DbSet<Order> Orders { get; set; }
 
+    public virtual DbSet<OrderDetail> OrderDetails { get; set; }
+
+    public virtual DbSet<Product> Products { get; set; }
+
     public virtual DbSet<Role> Roles { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -33,22 +37,14 @@ public partial class TodoListContext : DbContext
     {
         modelBuilder.Entity<Customer>(entity =>
         {
-            entity.HasKey(e => e.CustId);
-
             entity.ToTable("Customer");
 
-            entity.HasIndex(e => e.CustNo, "IX_Customer_NO").IsUnique();
-
-            entity.Property(e => e.CustId).HasColumnName("cust_id");
-            entity.Property(e => e.CustCode)
-                .HasMaxLength(50)
-                .HasColumnName("cust_code");
-            entity.Property(e => e.CustName)
-                .HasMaxLength(50)
-                .HasColumnName("cust_name");
-            entity.Property(e => e.CustNo)
-                .HasMaxLength(50)
-                .HasColumnName("cust_no");
+            entity.Property(e => e.CustomerId)
+                .HasMaxLength(5)
+                .IsFixedLength();
+            entity.Property(e => e.Address).HasMaxLength(50);
+            entity.Property(e => e.City).HasMaxLength(50);
+            entity.Property(e => e.CustomerName).HasMaxLength(50);
         });
 
         modelBuilder.Entity<Employee>(entity =>
@@ -84,26 +80,49 @@ public partial class TodoListContext : DbContext
 
         modelBuilder.Entity<Order>(entity =>
         {
-            entity.HasKey(e => e.RowId);
-
             entity.ToTable("Order");
 
-            entity.HasIndex(e => e.CustNo, "IX_Order");
+            entity.HasIndex(e => e.OrderDate, "IX_Order");
 
-            entity.Property(e => e.RowId).HasColumnName("row_id");
-            entity.Property(e => e.CustNo)
-                .HasMaxLength(50)
-                .HasColumnName("cust_no");
-            entity.Property(e => e.OrderId).HasColumnName("order_id");
-            entity.Property(e => e.Price)
-                .HasColumnType("decimal(18, 0)")
-                .HasColumnName("price");
+            entity.Property(e => e.CustomerId)
+                .HasMaxLength(5)
+                .IsFixedLength();
+            entity.Property(e => e.OrderDate).HasColumnType("datetime");
 
-            entity.HasOne(d => d.CustNoNavigation).WithMany(p => p.Orders)
-                .HasPrincipalKey(p => p.CustNo)
-                .HasForeignKey(d => d.CustNo)
-                .OnDelete(DeleteBehavior.Cascade)
+            entity.HasOne(d => d.Customer).WithMany(p => p.Orders)
+                .HasForeignKey(d => d.CustomerId)
                 .HasConstraintName("FK_Order_Customer");
+        });
+
+        modelBuilder.Entity<OrderDetail>(entity =>
+        {
+            entity.HasKey(e => new { e.OrderId, e.ProductId });
+
+            entity.ToTable("OrderDetail");
+
+            entity.HasIndex(e => e.OrderId, "OrderDetail");
+
+            entity.HasIndex(e => e.OrderId, "OrderId");
+
+            entity.HasIndex(e => e.ProductId, "ProductId");
+
+            entity.HasOne(d => d.Order).WithMany(p => p.OrderDetails)
+                .HasForeignKey(d => d.OrderId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_Order_OrderDetail");
+
+            entity.HasOne(d => d.Product).WithMany(p => p.OrderDetails)
+                .HasForeignKey(d => d.ProductId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_OrderDetail_Product");
+        });
+
+        modelBuilder.Entity<Product>(entity =>
+        {
+            entity.ToTable("Product");
+
+            entity.Property(e => e.ProductId).ValueGeneratedNever();
+            entity.Property(e => e.Name).HasMaxLength(50);
         });
 
         modelBuilder.Entity<Role>(entity =>

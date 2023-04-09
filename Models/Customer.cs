@@ -5,13 +5,13 @@ namespace WebApiDBFirst.Models;
 
 public partial class Customer
 {
-    public int CustId { get; set; }
+    public string CustomerId { get; set; } = null!;
 
-    public string? CustName { get; set; }
+    public string CustomerName { get; set; } = null!;
 
-    public string? CustCode { get; set; }
+    public string? Address { get; set; }
 
-    public string CustNo { get; set; } = null!;
+    public string? City { get; set; }
 
     public virtual ICollection<Order> Orders { get; } = new List<Order>();
 }
